@@ -127,7 +127,8 @@
     if (im) cobrir(ctx, im, -w / 2 + m, -h / 2 + m, w - 2 * m, h - 2 * m);
     else {
       ctx.strokeStyle = '#CDB993'; ctx.lineWidth = 4; ctx.setLineDash([12, 8]); ctx.strokeRect(-w / 2 + m, -h / 2 + m, w - 2 * m, h - 2 * m); ctx.setLineDash([]);
-      ctx.fillStyle = C.tinta; ctx.textAlign = 'center'; ctx.font = `400 ${Math.round(h * .14)}px ${F.pincel}`; ctx.fillText('Foto do prato de hoje', 0, h * .05); ctx.textAlign = 'left';
+      const sf = cabe(ctx, 'Foto do prato de hoje', 400, F.pincel, Math.round(h * .14), w - 2 * m - 40);
+      ctx.fillStyle = C.tinta; ctx.textAlign = 'center'; ctx.font = `400 ${sf}px ${F.pincel}`; ctx.fillText('Foto do prato de hoje', 0, h * .05); ctx.textAlign = 'left';
     }
     ctx.fillStyle = 'rgba(226,211,180,.85)'; ctx.rotate(-4 * Math.PI / 180); ctx.fillRect(-70, -h / 2 - 16, 140, 32);
     ctx.restore();
@@ -199,23 +200,26 @@
 
     const status = formato === 'status';
     fundo(ctx, w, h, clara, '#B7946A');
+    // Status: tudo entre ~240 e ~1700 px, fora de onde o WhatsApp e o Instagram põem o nome (topo) e o campo de
+    // resposta (rodapé). A foto fica ao lado dos preços, sem nada por cima.
     const Y = status
-      ? { logo: 180, logoH: 210, faixa: 360, faixaH: 520, data: 412, l1: 672, l2: 868, chapeu: [800, 690], lousa: [60, 905, 960, 300], precos: [60, 1230, 960, 190], foto: [190, 1440, 700, 230], contato: [70, 1610, 940, 140], fita: null, rod: [1765, 84] }
+      ? { logo: 240, logoH: 170, faixa: 390, faixaH: 485, data: 452, l1: 690, l2: 860, chapeu: [800, 695], lousa: [60, 900, 960, 220], precos: [620, 1140, 400, 340], foto: [60, 1152, 530, 316], contato: [70, 1495, 940, 120], fita: null, rod: [1625, 72] }
       : { logo: -14, logoH: 200, faixa: 168, faixaH: 478, data: 214, l1: 448, l2: 628, chapeu: [800, 460], lousa: [50, 668, 560, 340], precos: [630, 652, 400, 392], foto: [600, 1066, 430, 196], contato: [40, 1044, 528, 160], fita: [64, 1200, 430, 54], rod: [1272, 78] };
 
     xis(ctx, 104, status ? 120 : 96, 66, C.vermelho, 10);
     xis(ctx, 990, status ? 140 : 104, 46, C.tinta, -6);
+    if (status) { xis(ctx, 150, 1810, 54, C.tinta, -8); xis(ctx, 940, 1790, 66, C.vermelho, 12); }
     faixa(ctx, -10, Y.faixa, w + 20, Y.faixaH, escura);
     logo(ctx, w / 2, Y.logo, 420, Y.logoH, icone, S.nome, S.tipo);
     ctx.fillStyle = C.creme2; ctx.font = `600 30px ${F.rotulo}`; espaco(ctx, 2); ctx.textAlign = 'center'; ctx.fillText(data, w / 2, Y.data + (status ? 0 : 0)); ctx.textAlign = 'left'; espaco(ctx, 0);
-    const st = cabe(ctx, 'CARDÁPIO', 400, F.titulo, status ? 230 : 205, w - 110);
+    const st = cabe(ctx, 'CARDÁPIO', 400, F.titulo, status ? 188 : 205, w - 110);
     gasto(ctx, 'CARDÁPIO', w / 2, Y.l1, `400 ${st}px ${F.titulo}`, C.giz, 'center', mascara, true);
     gasto(ctx, 'DO DIA!', w / 2 - 40, Y.l2, `400 ${st}px ${F.titulo}`, C.giz, 'center', mascara, true);
     if (chapeu) { ctx.save(); ctx.translate(Y.chapeu[0] + 105, Y.chapeu[1] + 60); ctx.rotate(-9 * Math.PI / 180); ctx.shadowColor = 'rgba(0,0,0,.3)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 6; ctx.drawImage(chapeu, -105, -62, 210, 124); ctx.restore(); }
     xis(ctx, 46, Y.lousa[1] + 20, 40, C.tinta, 8);
     xis(ctx, w - 40, Y.lousa[1] + Y.lousa[3] + 30, 42, C.vermelho, -10);
     if (p) lousa(ctx, ...Y.lousa, p, mascara);
-    precos(ctx, ...Y.precos, S.tamanhos.map(t => ({ nome: t.nome, preco: T.preco(S, p, t.id) })), status);
+    precos(ctx, ...Y.precos, S.tamanhos.map(t => ({ nome: t.nome, preco: T.preco(S, p, t.id) })), false);
     polaroid(ctx, foto, ...Y.foto, status ? -2 : 3, !!S.demo);
     contato(ctx, ...Y.contato, S);
     if (Y.fita) fita(ctx, ...Y.fita, 'FAÇA JÁ O SEU PEDIDO!', -1.5);
