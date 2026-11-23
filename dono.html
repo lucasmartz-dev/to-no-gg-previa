@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>To No GG · Painel do dono</title>
+<meta name="theme-color" content="#4A3626">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;800&family=Oswald:wght@500;600;700&family=Permanent+Marker&display=swap">
+<link rel="stylesheet" href="css/tonogg.css">
+<style>
+  .painel { display: flex; flex-direction: column; gap: 26px; padding: 26px 0 40px; max-width: 760px; margin: 0 auto; }
+  .bloco { padding: 28px 22px 22px; }
+  .bloco > * { position: relative; z-index: 1; }
+  .bloco h2 { margin: 0 0 4px; font: 400 34px/1 var(--f-titulo); text-transform: uppercase; color: var(--cafe-2); }
+  .bloco > p.dica { margin: 0 0 14px; }
+  .edit-prato { border: 2px dashed rgba(90, 62, 36, .35); border-radius: 10px; padding: 14px; display: grid; gap: 12px; }
+  .edit-prato + .edit-prato { margin-top: 14px; }
+  .lado { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tres { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .foto-edit { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .foto-edit img { width: 120px; height: 90px; object-fit: cover; border-radius: 6px; border: 3px solid #F7F1E4; box-shadow: 0 4px 10px rgba(0, 0, 0, .2); }
+  .checks { display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+  .checks label { flex-direction: row; align-items: center; gap: 8px; font: 500 16px/1.2 var(--f-texto); }
+  .checks input { width: 20px; height: 20px; accent-color: var(--vermelho); }
+  .linha-extra { display: grid; grid-template-columns: 1fr 110px auto; gap: 8px; align-items: end; }
+  .formatos { display: flex; gap: 8px; margin-bottom: 12px; }
+  .formatos button { border: 2px solid var(--cafe-2); background: transparent; border-radius: 999px; padding: 8px 16px; font: 600 15px/1 var(--f-rotulo); text-transform: uppercase; }
+  .formatos button[aria-pressed="true"] { background: var(--cafe-2); color: var(--creme); }
+  .tela-post { background: #2B1E15; border-radius: 10px; padding: 12px; display: flex; justify-content: center; }
+  .tela-post canvas, .tela-post img { width: 100%; max-width: 420px; height: auto; border-radius: 4px; box-shadow: 0 8px 20px rgba(0, 0, 0, .4); }
+  .ver-site { display: inline-block; margin-top: 10px; font: 600 16px/1 var(--f-rotulo); color: var(--creme-2); }
+  .salvo { font: 500 14px/1 var(--f-rotulo); color: var(--creme-2); margin: 8px 0 0; min-height: 14px; }
+  .perigo { background: transparent; border: 2px solid var(--vermelho-escuro); color: var(--vermelho-escuro); }
+  .precos-prato { border: 0; margin: 0; padding: 12px; background: rgba(190, 42, 33, .08); border-radius: 8px; }
+  .precos-prato legend { float: left; width: 100%; padding: 0; margin: 0 0 8px; font: 600 14px/1.2 var(--f-rotulo); color: var(--vermelho-escuro); }
+  .precos-prato .tres { clear: both; }
+  .reais { display: flex; align-items: center; background: #FFFCF5; border: 2px solid #CDB993; border-radius: 8px; padding-left: 10px; }
+  .reais span { font: 600 15px/1 var(--f-rotulo); color: #7A6650; }
+  .campos .reais input[type=number] { border: 0; background: transparent; padding: 10px 6px 10px 5px; min-width: 0; -moz-appearance: textfield; appearance: textfield; }
+  .reais input::-webkit-inner-spin-button, .reais input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .reais:focus-within { border-color: var(--vermelho); }
+</style>
+<meta name="robots" content="noindex, nofollow">
+<style>.previa{margin:0;padding:7px 16px;background:#2B1E15;color:#EEE3CD;text-align:center;font:500 13px/1.3 Oswald,"Arial Narrow",sans-serif;letter-spacing:.04em}</style>
+</head>
+<body>
+  <p class="previa">Prévia do site · proposta de Lucas Martz</p>
+  <header class="topo">
+    <a class="logo remendo" href="index.html" aria-label="Ver o site do To No GG">
+      <img src="img/logo-icone.svg" alt="" width="150" height="55">
+      <b id="logo-nome">TO NO GG</b>
+      <small id="logo-tipo">RESTAURANTE</small>
+    </a>
+  </header>
+  <section class="faixa" aria-labelledby="t">
+    <div class="miolo">
+      <h1 class="titulo gasto" id="t" style="font-size:clamp(48px,12vw,104px)"><span>Painel do dono</span></h1>
+      <p class="data" id="data"></p>
+      <a class="ver-site" href="index.html" target="_blank" rel="noopener">Ver o site como o cliente vê</a>
+      <p class="salvo" id="salvo" aria-live="polite"></p>
+    </div>
+  </section>
+  <main class="miolo"><div class="painel" id="painel"></div></main>
+  <div class="aviso" id="aviso" role="status" hidden></div>
+  <script src="js/dados.js"></script>
+  <script src="js/imagens.js"></script>
+  <script src="js/post.js"></script>
+  <script src="js/dono.js"></script>
+</body>
+</html>
